@@ -1,11 +1,11 @@
-import axios from "axios";
+import axios from 'axios'
 
 const request = axios.create({
-    baseURL: "http://ttapi.research.itcast.cn/"
+    baseURL: 'http://toutiao.itheima.net/',
+    timeout: 20000
 })
 
 // Request Protector
 
 // Response Protector
-
 export default request

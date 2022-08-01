@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    user:null  // an Object store user infomation(token...)
   },
   getters: {
   },
