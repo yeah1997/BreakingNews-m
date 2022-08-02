@@ -1,7 +1,9 @@
 <template>
   <div class="login-container">
     <!-- navi -->
-    <van-nav-bar class="page-nav-bar" title="登陆" />
+    <van-nav-bar class="page-nav-bar" title="登陆">
+      <van-icon slot="left" name="cross" @click="$router.back()"></van-icon>
+    </van-nav-bar>
     <!-- /navi -->
 
     <!-- login form -->
@@ -105,10 +107,14 @@ export default {
         duration: 0,
       });
 
+      // Login success or Fail
       try {
-        const res = await login(user);
-        console.log("Login Success", res);
+        const { data } = await login(user);
+        console.log("Login Success", data.data);
+        this.$store.commit("setUser", data.data); // Vuex Container
+
         this.$toast.success("Login Success"); // Login Remind
+        this.$router.push('/my')
       } catch (err) {
         // Code err
         if (err.response.status === 400) {
@@ -135,11 +141,11 @@ export default {
         const res = await sendSms(this.user.mobile);
         console.log(res);
       } catch (err) {
-        this.isCountdownShow = false  // Countdown No-Show
-        if(err.response.status === 429) {
-          this.$toast("Too often")
+        this.isCountdownShow = false; // Countdown No-Show
+        if (err.response.status === 429) {
+          this.$toast("Too often");
         } else {
-          this.$toast("Send Fail")
+          this.$toast("Send Fail");
         }
       }
     },
