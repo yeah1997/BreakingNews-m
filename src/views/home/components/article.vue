@@ -64,8 +64,6 @@ export default {
           with_top: 1
         })
 
-        console.log(data)
-
         const { results } = data.data
         this.list.push(...results)
 
