@@ -7,34 +7,47 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: ()=> import('@/views/login')
+    component: () => import('@/views/login')
   },
+
   {
     path: '/',
-    component: ()=>import('@/views/layout'),
+    component: () => import('@/views/layout'),
     children: [
       {
         path: '',
         name: 'home',
-        component: ()=>import('@/views/home'),
+        component: () => import('@/views/home'),
       },
       {
         path: '/qa',
         name: 'qa',
-        component: ()=>import('@/views/qa'),
+        component: () => import('@/views/qa'),
       },
       {
         path: '/my',
         name: 'my',
-        component: ()=>import('@/views/my'),
+        component: () => import('@/views/my'),
       },
       {
         path: '/video',
         name: 'video',
-        component: ()=>import('@/views/video'),
+        component: () => import('@/views/video'),
       }
     ]
   },
+
+  {
+    path: '/search',
+    name: 'search',
+    component: () => import('@/views/search')
+  },
+
+  {
+    path:'/article/:articleId',
+    name: 'article',
+    component: ()=> import('@/views/article')
+  }
 ]
 
 const router = new VueRouter({

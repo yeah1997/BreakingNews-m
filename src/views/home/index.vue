@@ -2,7 +2,15 @@
   <div class="home-container">
     <!-- navi -->
     <van-nav-bar class="page-nav-bar" fixed>
-      <van-button class="search-btn" slot="title" type="info" size="small" icon="search" round>
+      <van-button
+        class="search-btn"
+        slot="title"
+        type="info"
+        size="small"
+        icon="search"
+        round
+        to="/search"
+      >
         搜素
       </van-button>
     </van-nav-bar>
@@ -10,86 +18,101 @@
 
     <!-- Tab -->
     <van-tabs class="channel-tabs" v-model="active" animated swipeable>
-      <van-tab v-for="channel in channels" :key="channel.id" :title="channel.name">
+      <van-tab
+        v-for="channel in channels"
+        :key="channel.id"
+        :title="channel.name"
+      >
         <!-- ArticleList -->
         <ArticleList :channel="channel"></ArticleList>
         <!-- /ArticleList -->
       </van-tab>
       <div slot="nav-right" class="placeholder"></div>
-      <div slot="nav-right" class="humburger-btn" @click="isChannelEditShow = true">
+      <div
+        slot="nav-right"
+        class="humburger-btn"
+        @click="isChannelEditShow = true"
+      >
         <i class="news news-gengduo"></i>
       </div>
     </van-tabs>
     <!-- /Tab -->
 
     <!-- Close Icon -->
-    <van-popup v-model="isChannelEditShow" round closeable position="bottom" close-icon-position="top-left"
-      :style="{ height: '100%' }">
-      <ChannelEdit :myChannels="channels" :active="active" @update-active="onUpdateActive"></ChannelEdit>
+    <van-popup
+      v-model="isChannelEditShow"
+      round
+      closeable
+      position="bottom"
+      close-icon-position="top-left"
+      :style="{ height: '100%' }"
+    >
+      <ChannelEdit
+        :myChannels="channels"
+        :active="active"
+        @update-active="onUpdateActive"
+      ></ChannelEdit>
     </van-popup>
     <!-- /Close Icon -->
   </div>
 </template>
 
 <script>
-import ArticleList from '@/views/home/components/article.vue'
-import ChannelEdit from '@/views/home/components/channel-edit.vue'
-import { getUserChannels } from '@/api/user.js'
-import { mapState } from 'vuex'
-import { getItem } from '@/utils/storage'
+import ArticleList from "@/views/home/components/article.vue";
+import ChannelEdit from "@/views/home/components/channel-edit.vue";
+import { getUserChannels } from "@/api/user.js";
+import { mapState } from "vuex";
+import { getItem } from "@/utils/storage";
 
 export default {
-  name: 'HomeIndex',
+  name: "HomeIndex",
   data() {
     return {
       active: 0,
       channels: [],
-      isChannelEditShow: false,  // Channel Edit show
-    }
+      isChannelEditShow: false, // Channel Edit show
+    };
   },
   computed: {
-    ...mapState(['user'])
+    ...mapState(["user"]),
   },
 
   components: {
     ArticleList,
-    ChannelEdit
+    ChannelEdit,
   },
 
   created() {
-    this.loadChannel()
+    this.loadChannel();
   },
   methods: {
     // Load channel List
     async loadChannel() {
-
       try {
-        let channel = []
+        let channel = [];
 
         // already Login
         if (this.user) {
-          const { data } = await getUserChannels()
-          channel = data.data.channels
+          const { data } = await getUserChannels();
+          channel = data.data.channels;
+        } else {
+          // No login
+          const localChannels = getItem("News_title");
 
-        } else { // No login
-          const localChannels = getItem('News_title')
-          
           // hava Local Dta
-          if(localChannels) {
-            channel = localChannels
-          }else {  // No local Data
-            const { data } = await getUserChannels()
-            channel = data.data.channels
+          if (localChannels) {
+            channel = localChannels;
+          } else {
+            // No local Data
+            const { data } = await getUserChannels();
+            channel = data.data.channels;
           }
         }
 
-        this.channels = channel
+        this.channels = channel;
       } catch (err) {
-        this.$toast('Fail to load Channel List')
+        this.$toast("Fail to load Channel List");
       }
-
-
-
     },
     showPopup() {
       this.isChannelEditShow = true;
@@ -97,11 +120,11 @@ export default {
 
     // Turn to clicked Page
     onUpdateActive(index, isChannelEditShow = ture) {
-      this.active = index
-      this.isChannelEditShow = isChannelEditShow
-    }
-  }
-}
+      this.active = index;
+      this.isChannelEditShow = isChannelEditShow;
+    },
+  },
+};
 </script>
 
 <style scoped lang="less">
