@@ -46,7 +46,8 @@ const routes = [
   {
     path:'/article/:articleId',
     name: 'article',
-    component: ()=> import('@/views/article')
+    component: ()=> import('@/views/article'),
+    props:true,
   }
 ]
 
