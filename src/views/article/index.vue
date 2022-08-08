@@ -4,6 +4,16 @@
     <van-nav-bar class="page-nav-bar" left-arrow title="黑马头条"></van-nav-bar>
     <!-- /导航栏 -->
 
+    <!-- 评论回复 -->
+    <van-popup v-model="isReplyShow" position="bottom" style="height: 100%">
+      <CommentReply
+        v-if="isReplyShow"
+        :comment="currentComment"
+        @close="isReplyShow = false"
+      ></CommentReply>
+    </van-popup>
+    <!-- /评论回复 -->
+
     <div class="main-wrap">
       <!-- 加载中 -->
       <div class="loading-wrap" v-if="loading">
@@ -46,12 +56,26 @@
         ></div>
         <van-divider>正文结束</van-divider>
 
+        <!-- 文章评论 -->
+        <CommentList
+          :source="aritcle.art_id"
+          @onload-success="totalCommentCount = $event.total_count"
+          :list="allCommentList"
+          @reply-click="onReplyCick"
+        ></CommentList>
+        <!-- /文章评论 -->
+
         <!-- 底部区域 -->
         <div class="article-bottom">
-          <van-button class="comment-btn" type="default" round size="small"
+          <van-button
+            class="comment-btn"
+            type="default"
+            round
+            size="small"
+            @click="isPostShow = !isPostShow"
             >写评论</van-button
           >
-          <van-icon name="comment-o" info="123" color="#777" />
+          <van-icon name="comment-o" :info="totalCommentCount" color="#777" />
 
           <CollectArticle
             class="btn-item"
@@ -63,9 +87,18 @@
             v-model="aritcle.attitude"
             :article-id="aritcle.art_id"
           ></LikeArticle>
-          <van-icon name="share" color="#777777"></van-icon>
+          <van-icon name="isPostShow" color="#777777"></van-icon>
         </div>
         <!-- /底部区域 -->
+
+        <!-- 评论区弹出框 -->
+        <van-popup v-model="isPostShow" position="bottom">
+          <CommentPost
+            :target="aritcle.art_id"
+            @post-success="onPostSuccess"
+          ></CommentPost>
+        </van-popup>
+        <!-- /评论区弹出框 -->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -91,10 +124,11 @@
 import FollowUser from "@/components/follow-user";
 import CollectArticle from "@/components/collect-article";
 import LikeArticle from "@/components/like-article";
+import CommentList from "@/views/article/components/comment-list.vue";
+import CommentPost from "@/views/article/components/comment-post.vue";
+import CommentReply from "@/views/article/components/comment-reply.vue";
 
 import { getArticleById } from "@/api/article.js";
-import { addFollow, deleteFollow } from "@/api/user.js";
-
 import { ImagePreview } from "vant";
 
 export default {
@@ -103,6 +137,9 @@ export default {
     FollowUser,
     CollectArticle,
     LikeArticle,
+    CommentList,
+    CommentPost,
+    CommentReply,
   },
   props: {
     articleId: {
@@ -116,6 +153,16 @@ export default {
       loading: true, // isLoading
       errStatus: 0,
       followLoading: false,
+      totalCommentCount: 0,
+      isPostShow: false,
+      allCommentList: [],
+      isReplyShow: false,
+      currentComment: {},
+    };
+  },
+  provide() {
+    return {
+      articleId: this.articleId
     };
   },
   computed: {},
@@ -161,6 +208,17 @@ export default {
           });
         };
       });
+    },
+
+    onPostSuccess(data) {
+      this.isPostShow = false;
+      this.allCommentList.unshift(data.new_obj);
+    },
+
+    onReplyCick(comment) {
+      console.log("onReplyCick", comment);
+      this.currentComment = comment;
+      this.isReplyShow = true;
     },
   },
 };
