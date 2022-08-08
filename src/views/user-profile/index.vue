@@ -73,7 +73,12 @@
       position="bottom"
       style="height: 100%"
     >
-    <UpdatePhoto  :img="img" @close="isUpdatePhotoShow=false"></UpdatePhoto>
+      <UpdatePhoto
+        v-if="isUpdatePhotoShow"
+        :img="img"
+        @close="isUpdatePhotoShow = false"
+        @update-photo="user.photo = $event"
+      ></UpdatePhoto>
     </van-popup>
   </div>
 </template>
@@ -95,7 +100,7 @@ export default {
       isUpdateBirthdayShow: false,
       isUpdatePhotoShow: false,
       show: false,
-      img: null
+      img: null,
     };
   },
   created() {
@@ -105,7 +110,7 @@ export default {
     UpdateName,
     UpdateGender,
     UpdateBirthday,
-    UpdatePhoto
+    UpdatePhoto,
   },
   methods: {
     async loadUserProfile() {
@@ -122,9 +127,9 @@ export default {
       const file = this.$refs.file.files[0];
 
       this.img = window.URL.createObjectURL(file);
-      this.isUpdatePhotoShow = true
+      this.isUpdatePhotoShow = true;
 
-      this.$refs.file.value = ''
+      this.$refs.file.value = "";
     },
   },
 };

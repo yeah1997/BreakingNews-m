@@ -68,3 +68,12 @@ export const updateUserProfile = (data) => {
     data
   })
 }
+
+// Update User Photo
+export const updateUserPhoto = (data) => {
+  return request({
+    url: '/v1_0/user/photo',
+    method: 'PATCH',
+    data
+  })
+}
