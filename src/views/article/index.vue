@@ -1,7 +1,12 @@
 <template>
   <div class="article-container">
     <!-- 导航栏 -->
-    <van-nav-bar class="page-nav-bar" left-arrow title="黑马头条"></van-nav-bar>
+    <van-nav-bar
+      class="page-nav-bar"
+      left-arrow
+      title="黑马头条"
+      @click-left="onClickLeft"
+    ></van-nav-bar>
     <!-- /导航栏 -->
 
     <!-- 评论回复 -->
@@ -162,7 +167,7 @@ export default {
   },
   provide() {
     return {
-      articleId: this.articleId
+      articleId: this.articleId,
     };
   },
   computed: {},
@@ -220,6 +225,10 @@ export default {
       this.currentComment = comment;
       this.isReplyShow = true;
     },
+
+    onClickLeft() {
+      this.$router.back()
+    }
   },
 };
 </script>

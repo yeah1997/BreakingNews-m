@@ -52,7 +52,7 @@ export default {
       },
     },
     type: {
-      type: String.String,
+      type: String,
       default: 'a',
       validator(val) {
         return ['a', 'c'].includes(val)

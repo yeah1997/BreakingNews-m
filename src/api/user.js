@@ -51,3 +51,20 @@ export const deleteFollow = (target) => {
     method: 'DELETE'
   })
 }
+
+// Ger User Profile
+export const getUserProfile = () => {
+  return request({
+    url: '/v1_0/user/profile',
+    method: 'GET',
+  })
+}
+
+// Update User Profile
+export const updateUserProfile = (data) => {
+  return request({
+    url: '/v1_0/user/profile',
+    method: 'PATCH',
+    data
+  })
+}
